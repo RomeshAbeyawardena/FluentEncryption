@@ -4,9 +4,12 @@ using FluentEncryption.Shared.Builders;
 using FluentEncryption.Shared.Contracts.Factories;
 using FluentEncryption.Shared.Contracts.Services;
 using FluentEncryption.Shared.Domain;
+using FluentEncryption.Shared.Factories;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IO;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace FluentEncryption.Core
 {
@@ -56,6 +59,8 @@ namespace FluentEncryption.Core
         internal void BuildProviders()
         {
             services
+                .AddSingleton(new RecyclableMemoryStreamManager())
+                .AddSingleton<IStreamFactory<MemoryStream>, MemoryStreamFactory>()
                 .AddSingleton<IModelEncryptionServiceFactory, ModelEncryptionServiceFactory>()
                 .AddSingleton<IEncryptionService, EncryptionService>()
                 .AddSingleton(typeof(IModelEncryptionService<>), typeof(ModelEncryptionService<>));
